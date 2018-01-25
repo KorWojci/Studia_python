@@ -17,14 +17,14 @@ def popraw(word):
 
 def propozycje(slowo):
     # możliwe propozycje poprawionego słowa
-    print('baza')
-    print(baza([slowo]))
-    print('zmiana_1')
-    print(baza(zmiana_1(slowo)))
-    print('zmiana_2')
-    print(baza(edits2(slowo)))
-    print('slowo')
-    print([slowo])
+#    print('baza')
+#    print(baza([slowo]))
+#    print('zmiana_1')
+#    print(baza(zmiana_1(slowo)))
+#    print('zmiana_2')
+#    print(baza(zmiana_2(slowo)))
+#    print('slowo')
+#    print([slowo])
     return (baza([slowo]) or baza(zmiana_1(slowo)) or baza(zmiana_2(slowo)) or [slowo])
 
 
@@ -68,13 +68,25 @@ def zmiana_1(slowo):
     return set(usuwanie + przestawienie + zamiana + wstawianie)
 
 def zmiana_2(slowo):
-    "zmiany 2 operacji."
-    for e1 in zmiana_1(slowo):
-        for e2 in zmiana_1(slowo):
-            return e2
+    "uzyskanie podwariantów słów"
+    podwarianty = []
+#    print('Zmiana 1')
+#    print(zmiana_1(slowo))
+    for w in zmiana_1(slowo):
+        for s in zmiana_1(w):
+#            print('Zmiana 2')
+#            print(zmiana_1(w))
+            podwarianty.append(s)
+    print('Podwariany')
+    print(podwarianty)
+    return set(s)
+#    for e1 in zmiana_1(slowo):
+#        for e2 in zmiana_1(slowo):
+#            return e2
 #    return (e2 for e1 in zmiana_1(slowo) for e2 in zmiana_1(e1))
 
 print('Podaj slowo do poprawy:')
 slowo = input()
-print('Propozycje:')
-print(propozycje(slowo))
+
+print('Poprawione słowo:')
+print(popraw(slowo))
