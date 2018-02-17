@@ -1,3 +1,11 @@
+# Autorzy:
+# Katarzyna Wasilewska
+# Kordian Wojciechowski
+# Program sprawdza w podanym pliku tekstowym czy w słowach nie ma literówek
+# jeżeli słowo ma literówkę (maksymalnie 2 błędy) zostaje wpisane do pliku
+# o nazwie poprawione.txt w formacie slowo bazowe -> poprawione
+
+
 import re
 from collections import Counter
 
@@ -17,15 +25,8 @@ def popraw(word):
 
 def propozycje(slowo):
     # możliwe propozycje poprawionego słowa
-#    print('baza')
-#    print(baza([slowo]))
-#    print('zmiana_1')
-#    print(baza(zmiana_1(slowo)))
-#    print('zmiana_2')
-#    print(baza(zmiana_2(slowo)))
-#    print('slowo')
-#    print([slowo])
     return (baza([slowo]) or baza(zmiana_1(slowo)) or baza(zmiana_2(slowo)) or [slowo])
+
 
 
 def baza(slowa):
@@ -38,14 +39,14 @@ def baza(slowa):
 
 
 def zmiana_1(slowo):
-    "zmiana tylko jednej operacji, dodanie, usuniecie, zamiana"
+    # zmiana tylko jednej operacji, dodanie, usuniecie, zamiana, wstawianie, podzielenie"
     znaki = 'aąbcćdeęfghijklłmnoóprstuwzźż'
     podzial = []
     usuwanie = []
     przestawienie = []
     zamiana = []
     wstawianie = []
-    for i in range(len(slowo)):
+    for i in range(len(slowo)+1):
         podzial.append([slowo[:i], slowo[i:]])
 
     for L, R in podzial:
@@ -59,7 +60,7 @@ def zmiana_1(slowo):
     for L, R in podzial:
         if R is not None:
             for c in znaki:
-                zamiana.append(L + c + R)
+                zamiana.append(L + c + R[1:])
 
     for L, R in podzial:
         for c in znaki:
@@ -68,25 +69,38 @@ def zmiana_1(slowo):
     return set(usuwanie + przestawienie + zamiana + wstawianie)
 
 def zmiana_2(slowo):
-    "uzyskanie podwariantów słów"
+    # uzyskanie wszystkich słów z 2 zmianami
     podwarianty = []
 #    print('Zmiana 1')
 #    print(zmiana_1(slowo))
     for w in zmiana_1(slowo):
         for s in zmiana_1(w):
-#            print('Zmiana 2')
-#            print(zmiana_1(w))
             podwarianty.append(s)
-    print('Podwariany')
-    print(podwarianty)
-    return set(s)
-#    for e1 in zmiana_1(slowo):
-#        for e2 in zmiana_1(slowo):
-#            return e2
-#    return (e2 for e1 in zmiana_1(slowo) for e2 in zmiana_1(e1))
 
-print('Podaj slowo do poprawy:')
-slowo = input()
+    return set(podwarianty)
 
-print('Poprawione słowo:')
-print(popraw(slowo))
+print('Podaj nazwe pliku w formacie plik.txt')
+plik = input()
+
+poprawione_slowa = []
+
+file = open(plik, 'r').read().split()
+
+for w in file:
+    w2 = w.lower()
+    s = popraw(w2)
+    if s == w2:
+        continue
+    else:
+        poprawione_slowa.append([w, '->', s])
+
+print(poprawione_slowa)
+
+file_2 = open('poprawione.txt', 'w')
+for x in poprawione_slowa:
+    linia = x[0] + ' ' + x[1] + ' ' + x[2] + '\n'
+    print(linia)
+    file_2.write(linia)
+file_2.close()
+#print('Poprawione słowa:')
+#print(popraw(slowo))
